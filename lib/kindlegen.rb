@@ -11,7 +11,9 @@ module Kindlegen
   # Getting command path of kindlegen.
   #
   def self.command
-    Bin.join('kindlegen')
+    path = Bin.join('kindlegen')
+    path = path.sub_ext '.exe' if windows?
+    path
   end
 
   #

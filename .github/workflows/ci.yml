@@ -5,7 +5,7 @@ jobs:
   build:
     strategy:
       matrix:
-        ruby: [2.4, 2.5, 2.6, 2.7]
+        ruby: [jruby, 2.4, 2.5, 2.6, 2.7]
         # TODO: https://github.com/tdtds/kindlegen/issues/36
         # Add macos-latest when kindlegen is fixed to work on Catalina
         platform: [ubuntu-latest, windows-latest]
@@ -15,6 +15,9 @@ jobs:
       - uses: eregon/use-ruby-action@master
         with:
           ruby-version: ${{ matrix.ruby }}
+      # Workaround for `rake build` failing to build a gem
+      - run: echo "::set-env name=GEM::gem.bat"
+        if: matrix.os == 'windows-latest' && matrix.ruby == 'jruby'
       - run: gem install bundler
       - run: bundle install
       - run: bundle exec rake build test
